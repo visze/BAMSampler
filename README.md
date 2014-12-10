@@ -23,7 +23,7 @@ java -jar target/bamsampler-<version>.jar
 
 The command-line help will be:
 
->
+<pre>
 -o,--output <arg>             Output BAM-File
 -a,--sample-addition <arg>    Adds the string after the sample in the read
                               name. Read name will be like sample_addition_oldname
@@ -33,6 +33,7 @@ The command-line help will be:
                               Second row: Sample-name
 -h,--help                     Print this help message.
 -t,--threads <arg>            Number of threads for sampling
+</pre>
 
 Example command can be:
 ```bash
