@@ -8,7 +8,7 @@ The sampling is similar to picardtools BAMSampler but with merging, sorting and 
 
 1. Download the master branch from git.
 ```bash
-git co TODO BAMSampler
+git co https://github.com/visze/BAMSampler.git BAMSampler
 ```
 2. Install files with maven
 ```bash
