@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/visze/BAMSampler.svg)](https://travis-ci.org/visze/BAMSampler)
+
 # BAMSampler
 
 This tool uses several BAM files to generated a new sampled BAM. It goes over each reads and choose a read by a probability of 1 divided by the number of BAMS to sample. The output is a new sorted and indexed BAM.
