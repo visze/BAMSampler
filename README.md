@@ -1,4 +1,8 @@
-[![Build Status](https://travis-ci.org/visze/BAMSampler.svg)](https://travis-ci.org/visze/BAMSampler)
+<b>Build Status:</b>
+[![Build Status](https://travis-ci.org/visze/BAMSampler.svg?branch=master)](https://travis-ci.org/visze/BAMSampler)
+ (Stable), 
+[![Build Status](https://travis-ci.org/visze/BAMSampler.svg?branch=development)](https://travis-ci.org/visze/BAMSampler)
+(Development)
 
 # BAMSampler
 
