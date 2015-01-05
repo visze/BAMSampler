@@ -21,13 +21,13 @@ public class BAMSamplerTest {
 
 	// BAM TEST
 	String samplesBAM = "NC_000919.1_BAMsamples.tsv";
-	String outputBAMFolder = "test_output";
+	String outputBAMFolder = "mapping_files";
 	String outputBAMName = "NC_000919.1_BAM_sampled.bam";
 	String additionBAM = "testbam";
 
 	// test SAM
 	String samplesSAM = "NC_000919.1_SAMsamples.tsv";
-	String outputSAMFolder = "test_output";
+	String outputSAMFolder = "mapping_files";
 	String outputSAMName = "NC_000919.1_SAM_sampled.bam";
 	String additionSAM = "testsam";
 	
