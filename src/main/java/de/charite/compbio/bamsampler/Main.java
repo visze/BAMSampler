@@ -18,6 +18,7 @@ import net.sf.samtools.BAMIndexMetaData;
 import net.sf.samtools.SAMFileHeader;
 import net.sf.samtools.SAMFileReader;
 import net.sf.samtools.SAMRecord;
+import net.sf.samtools.SAMFileReader.ValidationStringency;
 
 import org.apache.commons.cli.ParseException;
 
@@ -134,6 +135,8 @@ public class Main {
 		SAMFileHeader header = null;
 		for (Entry<String,String> entry : samples.entrySet()) {
 			final SAMFileReader in = new SAMFileReader(new File(entry.getValue()));
+			//stringency SILENT to omit failures in mark duplicate reads
+			in.setValidationStringency(ValidationStringency.SILENT);
 			if (header == null) {
 				header = in.getFileHeader();
 				in.close();

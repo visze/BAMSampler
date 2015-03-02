@@ -12,6 +12,7 @@ import net.sf.samtools.SAMFileReader;
 import net.sf.samtools.SAMFileWriter;
 import net.sf.samtools.SAMFileWriterFactory;
 import net.sf.samtools.SAMRecord;
+import net.sf.samtools.SAMFileReader.ValidationStringency;
 
 public class BamSampler implements Runnable {
 	
@@ -49,6 +50,9 @@ public class BamSampler implements Runnable {
 			
 			String nameAddition = entry.getKey() + "_" + addition;
 			final SAMFileReader in = new SAMFileReader(new File(entry.getValue()));
+			
+			//stringency SILENT to omit failures in mark duplicate reads
+			in.setValidationStringency(ValidationStringency.SILENT);
 			
 			//only works with BAMs not with SAMs
 			if (in.isBinary())
