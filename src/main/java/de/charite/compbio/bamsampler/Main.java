@@ -17,10 +17,13 @@ import net.sf.samtools.AbstractBAMFileIndex;
 import net.sf.samtools.BAMIndexMetaData;
 import net.sf.samtools.SAMFileHeader;
 import net.sf.samtools.SAMFileReader;
+import net.sf.samtools.SAMReadGroupRecord;
 import net.sf.samtools.SAMRecord;
 import net.sf.samtools.SAMFileReader.ValidationStringency;
 
 import org.apache.commons.cli.ParseException;
+
+import com.sun.prism.ReadbackGraphics;
 
 import de.charite.compbio.bamsampler.cli.CLILoaderSettings;
 import de.charite.compbio.bamsampler.model.BAMIndexer;
@@ -74,7 +77,7 @@ public class Main {
 		double threadSize = (double)samples.size()/(double)threads;
 		int count = 0;
 		double probability = 1.0/(double)samples.size();
-		SAMFileHeader header = createHeader(samples);
+		SAMFileHeader header = createHeader(samples, addition);
 		
 		List<BamSampler> sampler = new ArrayList<BamSampler>();
 		List<String> sampleSet = new ArrayList<String>();
@@ -131,14 +134,20 @@ public class Main {
 		
 	}
 
-	private static SAMFileHeader createHeader(Map<String, String> samples) {
+	private static SAMFileHeader createHeader(Map<String, String> samples, String id) {
 		SAMFileHeader header = null;
 		for (Entry<String,String> entry : samples.entrySet()) {
 			final SAMFileReader in = new SAMFileReader(new File(entry.getValue()));
 			//stringency SILENT to omit failures in mark duplicate reads
 			in.setValidationStringency(ValidationStringency.SILENT);
 			if (header == null) {
+				
 				header = in.getFileHeader();
+				List<SAMReadGroupRecord> rgs = new ArrayList<SAMReadGroupRecord>();
+				SAMReadGroupRecord rg = new SAMReadGroupRecord(id);
+				rg.setSample("Sampled");
+				rgs.add(rg);
+				header.setReadGroups(rgs);
 				in.close();
 				break;
 //				header.addComment("sampled bam file");
