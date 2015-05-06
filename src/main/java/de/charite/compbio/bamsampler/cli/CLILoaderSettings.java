@@ -24,7 +24,7 @@ public class CLILoaderSettings {
 	
 	public static Map<String,String> SAMPLES;
 	public static String OUTPUT;
-	public static String ADDITION;
+	public static String ADDITION = "sampled";
 	public static int THREADS = 1;
 	
 	

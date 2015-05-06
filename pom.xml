@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.charite.compbio</groupId>
 	<artifactId>bamsampler</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.3</version>
 	<name>BAMSampler</name>
 	<description>Samples bam-files into a new file</description>
 		<properties>

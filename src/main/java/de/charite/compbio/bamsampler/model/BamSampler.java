@@ -2,7 +2,9 @@ package de.charite.compbio.bamsampler.model;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Map.Entry;
@@ -11,7 +13,9 @@ import net.sf.samtools.SAMFileHeader;
 import net.sf.samtools.SAMFileReader;
 import net.sf.samtools.SAMFileWriter;
 import net.sf.samtools.SAMFileWriterFactory;
+import net.sf.samtools.SAMReadGroupRecord;
 import net.sf.samtools.SAMRecord;
+import net.sf.samtools.SAMFileReader.ValidationStringency;
 
 public class BamSampler implements Runnable {
 	
@@ -39,16 +43,19 @@ public class BamSampler implements Runnable {
 		
 		final SAMFileWriter out = new SAMFileWriterFactory().makeSAMOrBAMWriter(header, false, tmpFile);
 		
-		
-		if (addition == null)
-			addition = "";
-		else 
-			addition += "_";
-		
 		for (Entry<String,String> entry : samples.entrySet()) {
 			
 			String nameAddition = entry.getKey() + "_" + addition;
 			final SAMFileReader in = new SAMFileReader(new File(entry.getValue()));
+			
+			//stringency SILENT to omit failures in mark duplicate reads
+			in.setValidationStringency(ValidationStringency.SILENT);
+			
+			List<SAMReadGroupRecord> rgs = new ArrayList<SAMReadGroupRecord>();
+			SAMReadGroupRecord rg = new SAMReadGroupRecord(addition);
+			rg.setSample("Sampled");
+			rgs.add(rg);
+			in.getFileHeader().setReadGroups(rgs);
 			
 			//only works with BAMs not with SAMs
 			if (in.isBinary())
@@ -73,6 +80,7 @@ public class BamSampler implements Runnable {
 				if (keeper) {
 					String readName = nameAddition + rec.getReadName();
 					rec.setReadName(readName);
+					rec.setAttribute("RG", addition);
 					out.addAlignment(rec);
 					++kept;
 				}
