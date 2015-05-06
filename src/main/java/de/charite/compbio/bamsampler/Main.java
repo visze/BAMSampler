@@ -17,19 +17,17 @@ import net.sf.samtools.AbstractBAMFileIndex;
 import net.sf.samtools.BAMIndexMetaData;
 import net.sf.samtools.SAMFileHeader;
 import net.sf.samtools.SAMFileReader;
+import net.sf.samtools.SAMFileReader.ValidationStringency;
 import net.sf.samtools.SAMReadGroupRecord;
 import net.sf.samtools.SAMRecord;
-import net.sf.samtools.SAMFileReader.ValidationStringency;
 
 import org.apache.commons.cli.ParseException;
-
-import com.sun.prism.ReadbackGraphics;
 
 import de.charite.compbio.bamsampler.cli.CLILoaderSettings;
 import de.charite.compbio.bamsampler.model.BAMIndexer;
 import de.charite.compbio.bamsampler.model.BamFileMerger;
-import de.charite.compbio.bamsampler.model.BamSorter;
 import de.charite.compbio.bamsampler.model.BamSampler;
+import de.charite.compbio.bamsampler.model.BamSorter;
 
 public class Main {
 	
