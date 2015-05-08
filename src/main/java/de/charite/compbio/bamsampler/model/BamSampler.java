@@ -49,7 +49,7 @@ public class BamSampler implements Runnable {
 			final SAMFileReader in = new SAMFileReader(new File(entry.getValue()));
 			
 			//stringency SILENT to omit failures in mark duplicate reads
-			in.setValidationStringency(ValidationStringency.SILENT);
+			in.setValidationStringency(ValidationStringency.LENIENT);
 			
 			List<SAMReadGroupRecord> rgs = new ArrayList<SAMReadGroupRecord>();
 			SAMReadGroupRecord rg = new SAMReadGroupRecord(addition);

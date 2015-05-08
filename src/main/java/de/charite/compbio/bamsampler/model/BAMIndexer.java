@@ -8,7 +8,7 @@ import net.sf.samtools.SAMFileReader.ValidationStringency;
 public class BAMIndexer extends BuildBamIndex {
 	
 	public BAMIndexer(File input) {
-		super.VALIDATION_STRINGENCY = ValidationStringency.SILENT;
+		super.VALIDATION_STRINGENCY = ValidationStringency.LENIENT;
 		this.INPUT = input.getAbsolutePath();
 	}
 	

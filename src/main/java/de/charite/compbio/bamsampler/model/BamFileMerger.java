@@ -8,7 +8,7 @@ import net.sf.samtools.SAMFileReader.ValidationStringency;
 
 public class BamFileMerger extends MergeSamFiles{
 	public BamFileMerger(List<File> input, File output) {
-		super.VALIDATION_STRINGENCY = ValidationStringency.SILENT;
+		super.VALIDATION_STRINGENCY = ValidationStringency.LENIENT;
 		this.INPUT = input;
 		this.OUTPUT = output;
 	}
