@@ -1,6 +1,14 @@
 package de.charite.compbio.bamsampler;
 
 
+import htsjdk.samtools.AbstractBAMFileIndex;
+import htsjdk.samtools.BAMIndexMetaData;
+import htsjdk.samtools.SAMFileHeader;
+import htsjdk.samtools.SAMFileReader;
+import htsjdk.samtools.SAMReadGroupRecord;
+import htsjdk.samtools.SAMRecord;
+import htsjdk.samtools.ValidationStringency;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -12,14 +20,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-
-import net.sf.samtools.AbstractBAMFileIndex;
-import net.sf.samtools.BAMIndexMetaData;
-import net.sf.samtools.SAMFileHeader;
-import net.sf.samtools.SAMFileReader;
-import net.sf.samtools.SAMFileReader.ValidationStringency;
-import net.sf.samtools.SAMReadGroupRecord;
-import net.sf.samtools.SAMRecord;
 
 import org.apache.commons.cli.ParseException;
 

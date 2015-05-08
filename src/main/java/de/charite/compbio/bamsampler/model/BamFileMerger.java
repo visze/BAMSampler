@@ -1,10 +1,11 @@
 package de.charite.compbio.bamsampler.model;
 
+import htsjdk.samtools.ValidationStringency;
+
 import java.io.File;
 import java.util.List;
 
-import net.sf.picard.sam.MergeSamFiles;
-import net.sf.samtools.SAMFileReader.ValidationStringency;
+import picard.sam.MergeSamFiles;
 
 public class BamFileMerger extends MergeSamFiles{
 	public BamFileMerger(List<File> input, File output) {

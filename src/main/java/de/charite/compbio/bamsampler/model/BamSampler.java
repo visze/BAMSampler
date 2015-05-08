@@ -1,21 +1,22 @@
 package de.charite.compbio.bamsampler.model;
 
+import htsjdk.samtools.SAMFileHeader;
+import htsjdk.samtools.SAMFileWriter;
+import htsjdk.samtools.SAMFileWriterFactory;
+import htsjdk.samtools.SAMReadGroupRecord;
+import htsjdk.samtools.SAMRecord;
+import htsjdk.samtools.SamReader;
+import htsjdk.samtools.SamReaderFactory;
+import htsjdk.samtools.ValidationStringency;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Map.Entry;
-
-import net.sf.samtools.SAMFileHeader;
-import net.sf.samtools.SAMFileReader;
-import net.sf.samtools.SAMFileWriter;
-import net.sf.samtools.SAMFileWriterFactory;
-import net.sf.samtools.SAMReadGroupRecord;
-import net.sf.samtools.SAMRecord;
-import net.sf.samtools.SAMFileReader.ValidationStringency;
+import java.util.Random;
 
 public class BamSampler implements Runnable {
 	
@@ -42,14 +43,14 @@ public class BamSampler implements Runnable {
 		final Random r = RANDOM_SEED == null ? new Random() : new Random(RANDOM_SEED);
 		
 		final SAMFileWriter out = new SAMFileWriterFactory().makeSAMOrBAMWriter(header, false, tmpFile);
-		
+		SamReaderFactory.setDefaultValidationStringency(ValidationStringency.LENIENT);
+		SamReaderFactory factory = SamReaderFactory.make();
+
 		for (Entry<String,String> entry : samples.entrySet()) {
 			
 			String nameAddition = entry.getKey() + "_" + addition;
-			final SAMFileReader in = new SAMFileReader(new File(entry.getValue()));
-			
-			//stringency SILENT to omit failures in mark duplicate reads
-			in.setValidationStringency(ValidationStringency.LENIENT);
+
+			final SamReader in = factory.open(new File(entry.getValue()));
 			
 			List<SAMReadGroupRecord> rgs = new ArrayList<SAMReadGroupRecord>();
 			SAMReadGroupRecord rg = new SAMReadGroupRecord(addition);
@@ -57,9 +58,9 @@ public class BamSampler implements Runnable {
 			rgs.add(rg);
 			in.getFileHeader().setReadGroups(rgs);
 			
-			//only works with BAMs not with SAMs
-			if (in.isBinary())
-				in.enableIndexMemoryMapping(false);
+//			//only works with BAMs not with SAMs
+//			if (in.isBinary())
+//				in.enableIndexMemoryMapping(false);
 			
 			final Map<String,Boolean> decisions = new HashMap<String,Boolean>();
 
@@ -85,7 +86,11 @@ public class BamSampler implements Runnable {
 					++kept;
 				}
 			}
-			in.close();
+			try {
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			System.out.printf("Sample %s processed\n", entry.getKey());
 		}
 		out.close();
