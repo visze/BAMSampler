@@ -43,8 +43,9 @@ public class BamSampler implements Runnable {
 		final Random r = RANDOM_SEED == null ? new Random() : new Random(RANDOM_SEED);
 		
 		final SAMFileWriter out = new SAMFileWriterFactory().makeSAMOrBAMWriter(header, false, tmpFile);
-		SamReaderFactory.setDefaultValidationStringency(ValidationStringency.LENIENT);
+
 		SamReaderFactory factory = SamReaderFactory.make();
+		factory.validationStringency(ValidationStringency.LENIENT);
 
 		for (Entry<String,String> entry : samples.entrySet()) {
 			
@@ -56,6 +57,7 @@ public class BamSampler implements Runnable {
 			SAMReadGroupRecord rg = new SAMReadGroupRecord(addition);
 			rg.setSample("Sampled");
 			rgs.add(rg);
+			rgs.addAll(in.getFileHeader().getReadGroups());
 			in.getFileHeader().setReadGroups(rgs);
 			
 //			//only works with BAMs not with SAMs

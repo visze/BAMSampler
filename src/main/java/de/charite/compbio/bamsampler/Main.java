@@ -7,6 +7,8 @@ import htsjdk.samtools.SAMFileHeader;
 import htsjdk.samtools.SAMFileReader;
 import htsjdk.samtools.SAMReadGroupRecord;
 import htsjdk.samtools.SAMRecord;
+import htsjdk.samtools.SamReader;
+import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.ValidationStringency;
 
 import java.io.File;
@@ -132,12 +134,13 @@ public class Main {
 		
 	}
 
-	private static SAMFileHeader createHeader(Map<String, String> samples, String id) {
+	private static SAMFileHeader createHeader(Map<String, String> samples, String id) throws IOException {
 		SAMFileHeader header = null;
+		SamReaderFactory factory = SamReaderFactory.make();
+		factory.validationStringency(ValidationStringency.LENIENT);
 		for (Entry<String,String> entry : samples.entrySet()) {
-			final SAMFileReader in = new SAMFileReader(new File(entry.getValue()));
+			final SamReader in = factory.open(new File(entry.getValue()));
 			//stringency SILENT to omit failures in mark duplicate reads
-			in.setValidationStringency(ValidationStringency.SILENT);
 			if (header == null) {
 				
 				header = in.getFileHeader();
@@ -157,6 +160,9 @@ public class Main {
 	}
 
 	public static Map<String,Integer> getReadCount(Map<String, String> samples) {
+		
+		SamReaderFactory factory = SamReaderFactory.make();
+		factory.validationStringency(ValidationStringency.LENIENT);
 		
 		Map<String,Integer> output = new HashMap<String, Integer>();
 		for (Entry<String,String> entry : samples.entrySet()) {
