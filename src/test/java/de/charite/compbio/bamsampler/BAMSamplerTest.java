@@ -1,5 +1,9 @@
 package de.charite.compbio.bamsampler;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -14,7 +18,6 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 import de.charite.compbio.bamsampler.cli.CLILoaderSettings;
 
 public class BAMSamplerTest {
@@ -57,7 +60,7 @@ public class BAMSamplerTest {
 	}
 
 	@Test
-	public void testBamSamplerReadCountBAM() {
+	public void testBamSamplerReadCountBAM() throws IOException {
 		try {
 			loadCLI(samplesBAM, outputBAMFolder + "/" + outputBAMName, additionBAM);
 		} catch (IOException e) {
@@ -77,7 +80,7 @@ public class BAMSamplerTest {
 	}
 	
 	@Test
-	public void testBamSamplerReadCountSAM() {
+	public void testBamSamplerReadCountSAM() throws IOException {
 		try {
 			loadCLI(samplesSAM, outputSAMFolder + "/" + outputSAMName, additionSAM);
 		} catch (IOException e) {

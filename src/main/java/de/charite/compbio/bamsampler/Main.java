@@ -4,7 +4,6 @@ package de.charite.compbio.bamsampler;
 import htsjdk.samtools.AbstractBAMFileIndex;
 import htsjdk.samtools.BAMIndexMetaData;
 import htsjdk.samtools.SAMFileHeader;
-import htsjdk.samtools.SAMFileReader;
 import htsjdk.samtools.SAMReadGroupRecord;
 import htsjdk.samtools.SAMRecord;
 import htsjdk.samtools.SamReader;
@@ -159,22 +158,24 @@ public class Main {
 		return header;
 	}
 
-	public static Map<String,Integer> getReadCount(Map<String, String> samples) {
+	public static Map<String,Integer> getReadCount(Map<String, String> samples) throws IOException {
 		
 		SamReaderFactory factory = SamReaderFactory.make();
 		factory.validationStringency(ValidationStringency.LENIENT);
 		
+		
 		Map<String,Integer> output = new HashMap<String, Integer>();
 		for (Entry<String,String> entry : samples.entrySet()) {
 			output.put(entry.getKey(), 0);
-	        
-			SAMFileReader in = new SAMFileReader(new File(entry.getValue()));
+			
+			SamReader in = factory.open(new File(entry.getValue()));
+			
 			
 			//use index if binary
-			if (in.isBinary()) {
+			if (in.hasIndex()) {
 	 
-		        AbstractBAMFileIndex index = (AbstractBAMFileIndex) in.getIndex();
-	
+				AbstractBAMFileIndex index = (AbstractBAMFileIndex) in.indexing().getIndex();
+				
 		        for (int i = 0; i < index.getNumberOfReferences(); i++) {
 		            BAMIndexMetaData meta = index.getMetaData(i);
 		            output.put(entry.getKey(), output.get(entry.getKey())+ meta.getAlignedRecordCount());
