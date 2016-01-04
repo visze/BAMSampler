@@ -1,14 +1,15 @@
 package de.charite.compbio.bamsampler.model;
 
+import htsjdk.samtools.ValidationStringency;
+
 import java.io.File;
 
-import net.sf.picard.sam.BuildBamIndex;
-import net.sf.samtools.SAMFileReader.ValidationStringency;
+import picard.sam.BuildBamIndex;
 
 public class BAMIndexer extends BuildBamIndex {
 	
 	public BAMIndexer(File input) {
-		super.VALIDATION_STRINGENCY = ValidationStringency.SILENT;
+		super.VALIDATION_STRINGENCY = ValidationStringency.LENIENT;
 		this.INPUT = input.getAbsolutePath();
 	}
 	

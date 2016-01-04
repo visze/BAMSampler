@@ -1,6 +1,15 @@
 package de.charite.compbio.bamsampler;
 
 
+import htsjdk.samtools.AbstractBAMFileIndex;
+import htsjdk.samtools.BAMIndexMetaData;
+import htsjdk.samtools.SAMFileHeader;
+import htsjdk.samtools.SAMReadGroupRecord;
+import htsjdk.samtools.SAMRecord;
+import htsjdk.samtools.SamReader;
+import htsjdk.samtools.SamReaderFactory;
+import htsjdk.samtools.ValidationStringency;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -12,14 +21,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-
-import net.sf.samtools.AbstractBAMFileIndex;
-import net.sf.samtools.BAMIndexMetaData;
-import net.sf.samtools.SAMFileHeader;
-import net.sf.samtools.SAMFileReader;
-import net.sf.samtools.SAMFileReader.ValidationStringency;
-import net.sf.samtools.SAMReadGroupRecord;
-import net.sf.samtools.SAMRecord;
 
 import org.apache.commons.cli.ParseException;
 
@@ -132,12 +133,13 @@ public class Main {
 		
 	}
 
-	private static SAMFileHeader createHeader(Map<String, String> samples, String id) {
+	private static SAMFileHeader createHeader(Map<String, String> samples, String id) throws IOException {
 		SAMFileHeader header = null;
+		SamReaderFactory factory = SamReaderFactory.make();
+		factory.validationStringency(ValidationStringency.LENIENT);
 		for (Entry<String,String> entry : samples.entrySet()) {
-			final SAMFileReader in = new SAMFileReader(new File(entry.getValue()));
+			final SamReader in = factory.open(new File(entry.getValue()));
 			//stringency SILENT to omit failures in mark duplicate reads
-			in.setValidationStringency(ValidationStringency.SILENT);
 			if (header == null) {
 				
 				header = in.getFileHeader();
@@ -156,19 +158,24 @@ public class Main {
 		return header;
 	}
 
-	public static Map<String,Integer> getReadCount(Map<String, String> samples) {
+	public static Map<String,Integer> getReadCount(Map<String, String> samples) throws IOException {
+		
+		SamReaderFactory factory = SamReaderFactory.make();
+		factory.validationStringency(ValidationStringency.LENIENT);
+		
 		
 		Map<String,Integer> output = new HashMap<String, Integer>();
 		for (Entry<String,String> entry : samples.entrySet()) {
 			output.put(entry.getKey(), 0);
-	        
-			SAMFileReader in = new SAMFileReader(new File(entry.getValue()));
+			
+			SamReader in = factory.open(new File(entry.getValue()));
+			
 			
 			//use index if binary
-			if (in.isBinary()) {
+			if (in.hasIndex()) {
 	 
-		        AbstractBAMFileIndex index = (AbstractBAMFileIndex) in.getIndex();
-	
+				AbstractBAMFileIndex index = (AbstractBAMFileIndex) in.indexing().getIndex();
+				
 		        for (int i = 0; i < index.getNumberOfReferences(); i++) {
 		            BAMIndexMetaData meta = index.getMetaData(i);
 		            output.put(entry.getKey(), output.get(entry.getKey())+ meta.getAlignedRecordCount());
