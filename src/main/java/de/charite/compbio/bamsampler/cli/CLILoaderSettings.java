@@ -9,7 +9,7 @@ import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.MissingOptionException;
 import org.apache.commons.cli.Option;
@@ -52,8 +52,7 @@ public class CLILoaderSettings {
 		options.addOption(sampleAddition);
 		options.addOption(threads);
 		
-		CommandLineParser parser = new GnuParser();
-//		CommandLine cmd;
+		CommandLineParser parser = new DefaultParser();
 		try { 
 			CommandLine cmd = parser.parse( options, args); 
 			if(args.length == 0 || cmd.hasOption("h")) {
